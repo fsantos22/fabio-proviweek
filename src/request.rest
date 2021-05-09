@@ -1,0 +1,56 @@
+# @name signup
+POST http://localhost:3003/users/signup
+Content-Type: application/json
+
+{
+      "username": "user",
+      "email": "user@provi.com",
+      "password": "123456",
+      "role": "NORMAL"
+    }
+
+###
+
+# @name login
+POST http://localhost:3003/users/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+
+###
+
+# @name resetEmail
+@token = {{login.response.body.token}}
+PUT http://localhost:3003/users/reset-email
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "id": "4d49189a-d017-46b8-8268-a1396a1a6562",
+    "newEmail": "teste@provi.com.br"
+}
+
+###
+
+# @name resetPassword
+@token = {{login.response.body.token}}
+PUT http://localhost:3003/users/reset-password
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "id": "4d49189a-d017-46b8-8268-a1396a1a6562",
+    "oldPassword": "654321",
+    "newPassword": "123456",
+    "newPassword2": "123456"
+}
+
+###
+
+# @name getAllUsers
+GET http://localhost:3003/users/all
+Content-Type: application/json
+Authorization: {{token}}
