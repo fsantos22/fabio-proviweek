@@ -15,20 +15,20 @@ Content-Type: application/json
 POST http://localhost:3003/users/login
 Content-Type: application/json
 
-{
-    "username": "admin",
-    "password": "admin123"
-}
-
 # {
-#     "username": "joe",
-#     "password": "123456"
+#     "username": "admin",
+#     "password": "admin123"
 # }
 
+{
+    "username": "joe",
+    "password": "123456"
+}
+
 ###
+@token = {{login.response.body.token}}
 
 # @name resetEmail
-@token = {{login.response.body.token}}
 PUT http://localhost:3003/users/reset-email
 Content-Type: application/json
 Authorization: {{token}}
@@ -40,15 +40,27 @@ Authorization: {{token}}
 
 ###
 
-# @name resetPassword
-@token = {{login.response.body.token}}
+# @name resetPassword-USER
 PUT http://localhost:3003/users/reset-password
 Content-Type: application/json
 Authorization: {{token}}
 
 {
     "id": "4d49189a-d017-46b8-8268-a1396a1a6562",
-    "oldPassword": "654321",
+    "oldPassword": "123456",
+    "newPassword": "654321",
+    "newPassword2": "654321"
+}
+
+###
+
+# @name newPassword-ADMIN
+PUT http://localhost:3003/users/new-password
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "id": "4d49189a-d017-46b8-8268-a1396a1a6562",
     "newPassword": "123456",
     "newPassword2": "123456"
 }

@@ -1,7 +1,7 @@
 {
-  "name": "epps-fullstack",
+  "name": "epps-proviweek",
   "version": "1.0.0",
-  "description": "Projeto Fullstack",
+  "description": "Proviweek Challenge",
   "main": "./src/index.js",
   "scripts": {
     "test": "clear && echo \"Running tests...\" && jest",
@@ -20,7 +20,6 @@
     "@types/express": "^4.17.7",
     "@types/jest": "^25.2.3",
     "@types/jsonwebtoken": "^8.5.0",
-    "@types/knex": "^0.16.1",
     "@types/uuid": "^8.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -28,9 +27,7 @@
     "express": "^4.17.1",
     "jest": "^26.0.1",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.21.2",
     "moment": "^2.27.0",
-    "mysql": "^2.18.1",
     "ts-jest": "^26.1.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6",

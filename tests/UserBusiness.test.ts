@@ -108,21 +108,6 @@ describe("SignUp", () => {
     }
   });
 
-  it("Should throw error when e-mail is already registered", async () => {
-    expect.assertions(2);
-    try {
-      await userBusiness.signUp({
-        username: "normal",
-        email: "normal@provi.com",
-        password: "123456",
-        role: USER_ROLE.NORMAL,
-      });
-    } catch (error) {
-      expect(error.statusCode).toBe(409);
-      expect(error.message).toBe("Email is already in use");
-    }
-  });
-
   it("Success", async () => {
     expect.assertions(1);
     try {

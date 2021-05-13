@@ -81,10 +81,8 @@ export class User {
   }
 }
 
-export interface UserInputDTO {
-  username: string;
+export interface UserInputDTO extends LoginInputDTO {
   email: string;
-  password: string;
   role: USER_ROLE;
 }
 
@@ -93,14 +91,15 @@ export interface LoginInputDTO {
   password: string;
 }
 
-export interface resetPasswordInputDTO {
+export interface newPasswordInputDTO {
   id: string;
-  oldPassword: string;
   newPassword: string;
   newPassword2: string;
   token: string;
 }
-
+export interface resetPasswordInputDTO extends newPasswordInputDTO {
+  oldPassword: string;
+}
 export interface resetEmailInputDTO {
   id: string;
   newEmail: string;

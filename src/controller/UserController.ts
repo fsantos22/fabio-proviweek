@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   UserInputDTO,
   LoginInputDTO,
+  newPasswordInputDTO,
   resetPasswordInputDTO,
   resetEmailInputDTO,
 } from "../model/User";
@@ -51,9 +52,27 @@ export class UserController {
 
       await userBusiness.resetPassword(input);
 
-      res
-        .status(201)
-        .send({ message: "Password successfully changed!" });
+      res.status(201).send({ message: "Password successfully changed!" });
+    } catch (error) {
+      res.status(error.statusCode).send({ error: error.message });
+    }
+  }
+
+  async newPassword(req: Request, res: Response) {
+    try {
+      const { id, newPassword, newPassword2 } = req.body;
+      const token = req.headers.authorization as string;
+
+      const input: newPasswordInputDTO = {
+        id,
+        newPassword,
+        newPassword2,
+        token,
+      };
+
+      await userBusiness.newPassword(input);
+
+      res.status(201).send({ message: "Password successfully changed!" });
     } catch (error) {
       res.status(error.statusCode).send({ error: error.message });
     }
@@ -62,11 +81,11 @@ export class UserController {
   async resetEmail(req: Request, res: Response) {
     try {
       const { id, newEmail } = req.body;
-      const token = req.headers.authorization!
+      const token = req.headers.authorization!;
 
       const input: resetEmailInputDTO = { id, newEmail, token };
 
-      await userBusiness.resetEmail(input)
+      await userBusiness.resetEmail(input);
 
       res.status(200).send({ message: "E-mail successfully changed!" });
     } catch (error) {
@@ -76,7 +95,7 @@ export class UserController {
 
   async getAllUsers(req: Request, res: Response) {
     try {
-      const token = req.headers.authorization!
+      const token = req.headers.authorization!;
       const result = await userBusiness.getAllUsers(token);
       res.status(200).send({ Users: result });
     } catch (error) {

@@ -3,6 +3,7 @@ import {
   LoginInputDTO,
   validatePassword,
   User,
+  newPasswordInputDTO,
   resetPasswordInputDTO,
   resetEmailInputDTO,
   validateUsername,
@@ -31,14 +32,14 @@ export class UserBusiness {
       }
 
       if (!validateUsername(username)) {
-        throw new CustomError(422, "Invalid username. User just lowercase letters, numbers or _");
-      }
-
-      if(username.length < 3){
         throw new CustomError(
           422,
-          "username must be at lest 3 characters"
+          "Invalid username. User just lowercase letters, numbers or _"
         );
+      }
+
+      if (username.length < 3) {
+        throw new CustomError(422, "username must be at lest 3 characters");
       }
 
       if (!validateEmail(email)) {
@@ -128,7 +129,7 @@ export class UserBusiness {
 
       const tokenData = authenticator.getData(input.token);
 
-      if (id !== tokenData.id && tokenData.role !== "ADMIN") {
+      if (id !== tokenData.id) {
         throw new CustomError(401, "Unauthorized");
       }
 
@@ -143,6 +144,37 @@ export class UserBusiness {
       );
       if (!hashCompare) {
         throw new CustomError(422, "Invalid password");
+      }
+
+      if (newPassword !== newPassword2) {
+        throw new CustomError(422, "New password does not match");
+      }
+
+      const newHashPassword = await this.hashManager.hash(newPassword);
+
+      await userDatabase.resetPassword(id, newHashPassword);
+    } catch (error) {
+      throw new CustomError(error.statusCode, error.message);
+    }
+  }
+
+  async newPassword(input: newPasswordInputDTO): Promise<void> {
+    try {
+      const { id, newPassword, newPassword2 } = input;
+
+      if (!id || !newPassword || !newPassword2) {
+        throw new CustomError(422, "Missing input");
+      }
+
+      const tokenData = authenticator.getData(input.token);
+
+      if (tokenData.role !== "ADMIN") {
+        throw new CustomError(401, "Unauthorized");
+      }
+
+      const userFromDB = await this.userDatabase.getUserById(id);
+      if (!userFromDB) {
+        throw new CustomError(404, "User not found");
       }
 
       if (newPassword !== newPassword2) {
@@ -185,7 +217,7 @@ export class UserBusiness {
     }
   }
 
-  async getAllUsers(token: any):Promise<any[]> {
+  async getAllUsers(token: any): Promise<any[]> {
     try {
       const tokenData = authenticator.getData(token);
       const userRole = User.stringToUSER_ROLE(tokenData.role);
