@@ -1,5 +1,5 @@
 import { UserDatabase } from "../src/data/UserDatabase";
-import { Authenticator } from "../src/services/Authenticator";
+import { USER_ROLE } from "../src/model/User";
 import { UserBusiness } from "./../src/business/UserBusiness";
 import authenticatorMock from "./mocks/authenticatorMock";
 import hashManagerMock from "./mocks/hashManagerMock";
@@ -8,9 +8,9 @@ import userDatabaseMock from "./mocks/userDatabaseMock";
 
 const userBusiness = new UserBusiness(
   idGeneratorMock,
-  authenticatorMock as Authenticator,
+  authenticatorMock,
   hashManagerMock,
-  userDatabaseMock as UserDatabase
+  userDatabaseMock
 );
 
 describe("SignUp", () => {
@@ -21,7 +21,7 @@ describe("SignUp", () => {
         username: "",
         email: "normal@provi.com",
         password: "123456",
-        role: "normal",
+        role: USER_ROLE.NORMAL,
       });
     } catch (error) {
       expect(error.statusCode).toBe(422);
@@ -36,7 +36,7 @@ describe("SignUp", () => {
         username: "normal",
         email: "",
         password: "123456",
-        role: "normal",
+        role: USER_ROLE.NORMAL,
       });
     } catch (error) {
       expect(error.statusCode).toBe(422);
@@ -51,11 +51,43 @@ describe("SignUp", () => {
         username: "normal",
         email: "normal@provi.com",
         password: "",
-        role: "normal",
+        role: USER_ROLE.NORMAL,
       });
     } catch (error) {
       expect(error.statusCode).toBe(422);
       expect(error.message).toBe("Missing input");
+    }
+  });
+
+  it("Should throw error when username is less than 3 characters", async () => {
+    expect.assertions(2);
+    try {
+      await userBusiness.signUp({
+        username: "no",
+        email: "normal@provi.com",
+        password: "123456",
+        role: USER_ROLE.NORMAL,
+      });
+    } catch (error) {
+      expect(error.statusCode).toBe(422);
+      expect(error.message).toBe("username must be at lest 3 characters");
+    }
+  });
+
+  it("Should throw error when username has invalid characters", async () => {
+    expect.assertions(2);
+    try {
+      await userBusiness.signUp({
+        username: "noRm@l",
+        email: "normal@provi.com",
+        password: "123456",
+        role: USER_ROLE.NORMAL,
+      });
+    } catch (error) {
+      expect(error.statusCode).toBe(422);
+      expect(error.message).toBe(
+        "Invalid username. User just lowercase letters, numbers or _"
+      );
     }
   });
 
@@ -66,7 +98,7 @@ describe("SignUp", () => {
         username: "normal",
         email: "normal@provi.com",
         password: "123*456",
-        role: "normal",
+        role: USER_ROLE.NORMAL,
       });
     } catch (error) {
       expect(error.statusCode).toBe(422);
@@ -76,20 +108,18 @@ describe("SignUp", () => {
     }
   });
 
-  it("Should throw error when role is invalid", async () => {
+  it("Should throw error when e-mail is already registered", async () => {
     expect.assertions(2);
     try {
       await userBusiness.signUp({
         username: "normal",
         email: "normal@provi.com",
         password: "123456",
-        role: "invalid",
+        role: USER_ROLE.NORMAL,
       });
     } catch (error) {
-      expect(error.statusCode).toBe(422);
-      expect(error.message).toBe(
-        "Invalid user role. Choose between 'NORMAL' or 'ADMIN'"
-      );
+      expect(error.statusCode).toBe(409);
+      expect(error.message).toBe("Email is already in use");
     }
   });
 
@@ -100,7 +130,7 @@ describe("SignUp", () => {
         username: "normal",
         email: "normal@provi.com",
         password: "123456",
-        role: "NORMAL",
+        role: USER_ROLE.NORMAL,
       });
 
       expect(token).toBeDefined();

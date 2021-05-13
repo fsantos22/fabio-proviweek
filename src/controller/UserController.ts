@@ -53,7 +53,7 @@ export class UserController {
 
       res
         .status(201)
-        .send({ message: "Password successfully changed!", token });
+        .send({ message: "Password successfully changed!" });
     } catch (error) {
       res.status(error.statusCode).send({ error: error.message });
     }
@@ -68,7 +68,7 @@ export class UserController {
 
       await userBusiness.resetEmail(input)
 
-      res.status(200).send({ message: "E-mail successfully changed!", token });
+      res.status(200).send({ message: "E-mail successfully changed!" });
     } catch (error) {
       res.status(error.statusCode).send({ error: error.message });
     }

@@ -9,17 +9,26 @@ export class AuthenticatorMock {
     if (!token) {
       throw new CustomError(401, "Unauthorized!");
     }
+    let result: AuthenticationData;
     if (token === "ADMIN") {
-      return {
+      result= {
         id: "id-admin",
         role: "ADMIN",
       };
-    } else {
-      return {
+    }
+    else if (token === "NORMAL2") {
+      result = {
+        id: "id-normal2",
+        role: "NORMAL",
+      };
+    }
+    else {
+      result = {
         id: "id-normal",
         role: "NORMAL",
       };
     }
+    return result; 
   }
 }
 

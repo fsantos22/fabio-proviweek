@@ -1,5 +1,4 @@
 import { User, USER_ROLE } from "../../src/model/User";
-import { userDB } from "../../src/fakeDatabase/user"
 import { adminUserMock, normalUserMock } from "./userMocks";
 
 export class UserDatabaseMock {
@@ -14,10 +13,10 @@ export class UserDatabaseMock {
   public async getUserByEmail(email: string): Promise<User | undefined> {
     try {
       if(email === "normal@provi.com"){
-        return normalUserMock;
+        return User.toUserModel(normalUserMock);
       }
       if (email === "admin@provi.com") {
-        return adminUserMock;
+        return User.toUserModel(adminUserMock);
       }
     } catch (error) {
       throw new Error(error.message);
@@ -27,10 +26,10 @@ export class UserDatabaseMock {
   public async getUserByUsername(username: string): Promise<User | undefined> {
     try {
       if (username === "normal") {
-        return normalUserMock;
+        return User.toUserModel(normalUserMock);
       }
       if (username === "admin") {
-        return adminUserMock;
+        return User.toUserModel(adminUserMock);
       }
     } catch (error) {
       throw new Error(error.message);
@@ -40,10 +39,10 @@ export class UserDatabaseMock {
   public async getUserById(id: string): Promise<User | undefined> {
     try {
       if (id === "id-normal") {
-        return normalUserMock;
+        return User.toUserModel(normalUserMock);
       }
       if (id === "id-admin") {
-        return adminUserMock;
+        return User.toUserModel(adminUserMock);
       }
     } catch (error) {
       throw new Error(error.message);

@@ -5,6 +5,7 @@ import {
   User,
   resetPasswordInputDTO,
   resetEmailInputDTO,
+  validateUsername,
 } from "../model/User";
 import userDatabase, { UserDatabase } from "../data/UserDatabase";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
@@ -27,6 +28,17 @@ export class UserBusiness {
 
       if (!username || !email || !password) {
         throw new CustomError(422, "Missing input");
+      }
+
+      if (!validateUsername(username)) {
+        throw new CustomError(422, "Invalid username. User just lowercase letters, numbers or _");
+      }
+
+      if(username.length < 3){
+        throw new CustomError(
+          422,
+          "username must be at lest 3 characters"
+        );
       }
 
       if (!validateEmail(email)) {

@@ -4,14 +4,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export class Authenticator {
-  private jwtKey = "qwerty"
+  // private jwtKey = "qwerty"
   public generateToken(input: AuthenticationData): string {
     const token = jwt.sign(
       {
         id: input.id,
         role: input.role,
       },
-      this.jwtKey,
+      "QWERTY",
       {
         expiresIn: "24h",
       }
@@ -20,7 +20,7 @@ export class Authenticator {
   }
 
   public getData(token: string): AuthenticationData {
-    const payload = jwt.verify(token, this.jwtKey as string) as any;
+    const payload = jwt.verify(token, "QWERTY") as any;
     const result = {
       id: payload.id,
       role: payload.role,

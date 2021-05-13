@@ -50,16 +50,20 @@ export class User {
   }
 
   static stringToUSER_ROLE(input: string): USER_ROLE {
-    switch (input.toUpperCase()) {
-      case "NORMAL":
-        return USER_ROLE.NORMAL;
-      case "ADMIN":
-        return USER_ROLE.ADMIN;
-      default:
-        throw new CustomError(
-          422,
-          "Invalid user role. Choose between 'NORMAL' or 'ADMIN'"
-        );
+    if (input) {
+      switch (input?.toUpperCase()) {
+        case "NORMAL":
+          return USER_ROLE.NORMAL;
+        case "ADMIN":
+          return USER_ROLE.ADMIN;
+        default:
+          throw new CustomError(
+            422,
+            "Invalid user role. Choose between 'NORMAL' or 'ADMIN'"
+          );
+      }
+    } else {
+      return USER_ROLE.NORMAL;
     }
   }
 
@@ -81,7 +85,7 @@ export interface UserInputDTO {
   username: string;
   email: string;
   password: string;
-  role: string;
+  role: USER_ROLE;
 }
 
 export interface LoginInputDTO {
@@ -106,6 +110,11 @@ export interface resetEmailInputDTO {
 export enum USER_ROLE {
   NORMAL = "NORMAL",
   ADMIN = "ADMIN",
+}
+
+export const validateUsername = (username:string):boolean => {
+  const regex = /^[a-z0-9_]*$/
+  return regex.test(username)
 }
 
 export const validateEmail = (email: string):boolean => {
